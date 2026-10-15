@@ -1,0 +1,29 @@
+class_name mano
+extends RefCounted
+
+const capacidad := 2
+
+var cartas: Array = []
+var cantidad := 0
+
+func _init() -> void:
+	cartas.resize(capacidad)
+
+func esta_llena() -> bool:
+	return cantidad == capacidad
+
+func agregar(c: Carta) -> bool:
+	if esta_llena():
+		return false
+	cartas[cantidad] = c
+	cantidad += 1
+	return true
+	
+func obtener_cartas() -> Array:
+	var resultado: Array = []
+	for i in range(cantidad):
+		resultado.append(cartas[i])
+	return resultado
+	
+func limpiar() -> void:
+	cantidad = 0
