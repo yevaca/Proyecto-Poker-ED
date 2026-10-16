@@ -1,4 +1,4 @@
-class_name cartas_mesa
+class_name Cartas_mesa
 extends RefCounted
 
 const capacidad := 5

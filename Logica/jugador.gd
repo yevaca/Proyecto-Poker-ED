@@ -1,9 +1,9 @@
-class_name jugador 
+class_name Jugador 
 extends RefCounted
 
 var nombre: String
 var fichas: int
-var mano: mano
+var mano: Mano
 var apuesta_actual := 0
 var activo := true
 
@@ -18,6 +18,9 @@ func apostar(monto:int) -> bool:
 	fichas -= monto
 	apuesta_actual += monto
 	return true
+
+func reiniciar_apuesta() -> void:
+	apuesta_actual = 0
 
 func retirarse() -> void:
 	activo = false
