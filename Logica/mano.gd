@@ -1,4 +1,4 @@
-class_name mano
+class_name Mano
 extends RefCounted
 
 const capacidad := 2

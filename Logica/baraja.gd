@@ -1,4 +1,4 @@
-class_name baraja
+class_name Baraja
 extends RefCounted
 
 const capacidad := 52
