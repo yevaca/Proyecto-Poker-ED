@@ -26,16 +26,24 @@ func nueva_ronda(jugadores: Array) -> void:
 	for j in jugadores:
 		j.reiniciar_apuesta()
 
+## Paga TODO el bote a los ganadores (se divide en partes iguales).
 func pagar(ganadores: Array) -> void:
-	if ganadores.is_empty():
+	repartir(total, ganadores)
+
+
+## Reparte `monto` entre los ganadores y lo descuenta del bote. Si no se
+## divide exacto, las fichas sobrantes van al primero de la lista.
+## Se usa con cada bote lateral por separado.
+func repartir(monto: int, ganadores: Array) -> void:
+	if ganadores.is_empty() or monto <= 0:
 		return
 	var n: int = ganadores.size()
-	var parte: int = int(total / float(n))
-	var resto: int = total - parte * n
+	var parte: int = monto / n
+	var resto: int = monto - parte * n
 	for g in ganadores:
 		g.fichas += parte
 	ganadores[0].fichas += resto
-	total = 0
+	total -= monto
 
 func reiniciar() -> void:
 	total = 0
