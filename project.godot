@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="Proyecto Poker ED"
+run/main_scene="uid://kjh4wsmyk5t6"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [display]
 
-window/stretch/mode="canvas_items"
+window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 
 [physics]

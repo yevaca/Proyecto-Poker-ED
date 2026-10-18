@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://kjh4wsmyk5t6"]
+
+[ext_resource type="Script" uid="uid://coch58o02y4yh" path="res://UI/inicio.gd" id="1_d65oc"]
+
+[node name="Inicio" type="Control" unique_id=878060193]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+script = ExtResource("1_d65oc")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1120582128]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1442220055]
+layout_mode = 2
+
+[node name="LblTitulo" type="Label" parent="CenterContainer/VBoxContainer" unique_id=54768292]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Poker Texas Hold'em"
+
+[node name="FilaJugadores" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=715115070]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/FilaJugadores" unique_id=482835383]
+layout_mode = 2
+text = "Jugadores: "
+
+[node name="SpinJugadores" type="SpinBox" parent="CenterContainer/VBoxContainer/FilaJugadores" unique_id=495190362]
+layout_mode = 2
+
+[node name="ContenedorNombres" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=796213896]
+layout_mode = 2
+
+[node name="FilaFichas" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=355519396]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/FilaFichas" unique_id=1920494072]
+layout_mode = 2
+text = "Fichas iniciales: "
+
+[node name="SpinFichas" type="SpinBox" parent="CenterContainer/VBoxContainer/FilaFichas" unique_id=410321435]
+layout_mode = 2
+
+[node name="LblError" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1420893557]
+layout_mode = 2
+
+[node name="BtnJugar" type="Button" parent="CenterContainer/VBoxContainer" unique_id=360628789]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "JUGAR"
