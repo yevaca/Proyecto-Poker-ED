@@ -19,6 +19,12 @@ var panel_resultado: PanelContainer
 var lbl_res_titulo: Label
 var lbl_res_texto: Label
 var btn_res: Button
+var fila_bote: HBoxContainer
+var caja_fichas: HBoxContainer
+var _mesa_previas: int = 0      # cuantas cartas de la mesa ya se habian mostrado
+var _bote_previo: int = 0
+var _anim_mano: bool = false    # true justo despues de pulsar "Ver mis cartas"
+var _tween_bote: Tween
 
 @onready var lbl_fase: Label = $VBoxContainer/BarraSuperior/LblFase
 @onready var btn_menu: Button = $VBoxContainer/BarraSuperior/BtnMenu
@@ -43,6 +49,7 @@ var btn_res: Button
 func _ready() -> void:
 	_aplicar_estilo()
 	_crear_panel_resultado()
+	_crear_fichas_bote()
 
 	var nombres: Array = Config.nombres
 	if nombres.is_empty():
@@ -140,6 +147,9 @@ func _nueva_mano() -> void:
 	lbl_mensaje.text = ""
 	viendo = false
 	ganadores = []
+	_mesa_previas = 0
+	_bote_previo = 0
+	_limpiar(cartas_mesa)
 	if partida.iniciar_mano():
 		panel_resultado.visible = false
 	else:
@@ -149,6 +159,7 @@ func _nueva_mano() -> void:
 
 func _on_ver_pressed() -> void:
 	viendo = true
+	_anim_mano = true
 	_actualizar()
 
 
@@ -163,17 +174,27 @@ func _ejecutar(ok: bool) -> void:
 
 func _on_mano_terminada(resultados: Array) -> void:
 	ganadores = []
-	var lineas: Array = []
+	# Agrupa los botes por conjunto de ganadores: si el mismo jugador (o grupo)
+	# gano varios botes, se muestran sumados en una sola linea.
+	var grupos: Dictionary = {}
 	for r in resultados:
 		var nombres: Array = []
 		for g in r["ganadores"]:
 			nombres.append(g.nombre)
 			if not ganadores.has(g):
 				ganadores.append(g)
-		var verbo: String = "gana" if nombres.size() == 1 else "ganan"
-		var linea: String = "%s %s %d" % [", ".join(nombres), verbo, r["monto"]]
-		if r["categoria"] != "":
-			linea += " con %s" % r["categoria"]
+		var clave: String = ", ".join(nombres)
+		if not grupos.has(clave):
+			grupos[clave] = {"n": nombres.size(), "monto": 0, "categoria": r["categoria"]}
+		grupos[clave]["monto"] += r["monto"]
+
+	var lineas: Array = []
+	for clave in grupos:
+		var gr: Dictionary = grupos[clave]
+		var verbo: String = "gana" if gr["n"] == 1 else "ganan"
+		var linea: String = "%s %s %d" % [clave, verbo, gr["monto"]]
+		if gr["categoria"] != "":
+			linea += " con %s" % gr["categoria"]
 		lineas.append(linea)
 	viendo = false
 	_mostrar_resultado("\n".join(lineas))
@@ -198,8 +219,8 @@ func _crear_panel_resultado() -> void:
 	panel_resultado.anchor_bottom = 1.0
 	panel_resultado.offset_left = 0
 	panel_resultado.offset_right = 0
-	panel_resultado.offset_top = -250
-	panel_resultado.offset_bottom = -250
+	panel_resultado.offset_top = -80
+	panel_resultado.offset_bottom = -80
 	panel_resultado.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	panel_resultado.grow_vertical = Control.GROW_DIRECTION_BEGIN
 
@@ -244,6 +265,8 @@ func _mostrar_resultado(texto: String) -> void:
 		btn_res.text = "Siguiente mano"
 		fin_partida = false
 	panel_resultado.visible = true
+	panel_resultado.modulate.a = 0.0
+	panel_resultado.create_tween().tween_property(panel_resultado, "modulate:a", 1.0, 0.4)
 
 
 func _on_res_boton() -> void:
@@ -251,6 +274,21 @@ func _on_res_boton() -> void:
 		_volver_al_menu()
 	else:
 		_nueva_mano()
+
+
+func _crear_fichas_bote() -> void:
+	var padre: Node = lbl_bote.get_parent()
+	var indice: int = lbl_bote.get_index()
+	fila_bote = HBoxContainer.new()
+	fila_bote.alignment = BoxContainer.ALIGNMENT_CENTER
+	fila_bote.add_theme_constant_override("separation", 14)
+	padre.add_child(fila_bote)
+	padre.move_child(fila_bote, indice)
+	lbl_bote.reparent(fila_bote)
+
+	caja_fichas = HBoxContainer.new()
+	caja_fichas.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	fila_bote.add_child(caja_fichas)
 
 
 func _volver_al_menu() -> void:
@@ -266,16 +304,32 @@ func _actualizar() -> void:
 	var hay_turno: bool = actual != null
 
 	lbl_fase.text = "Fase: " + partida.nombre_fase().capitalize()
-	lbl_bote.text = "Bote: %d" % partida.bote.total
 
-	# Cartas comunitarias: siempre 5 posiciones, vacias hasta que salgan
-	_limpiar(cartas_mesa)
+	# Bote: texto + fichas, y salta cuando sube
+	var total: int = partida.bote.total
+	lbl_bote.text = "Bote: %d" % total
+	_limpiar(caja_fichas)
+	if total > 0:
+		caja_fichas.add_child(FichaUI.pila(total, 26, 8))
+	if total > _bote_previo:
+		_pulso(fila_bote)
+	_bote_previo = total
+
+	# Cartas comunitarias: solo se redibujan cuando sale una carta nueva
 	var comunitarias: Array = partida.mesa.obtener_cartas()
-	for i in range(5):
-		if i < comunitarias.size():
-			cartas_mesa.add_child(CartaUI.crear(comunitarias[i], true, TAM_MESA))
-		else:
-			cartas_mesa.add_child(CartaUI.hueco(TAM_MESA))
+	if comunitarias.size() != _mesa_previas or cartas_mesa.get_child_count() == 0:
+		_limpiar(cartas_mesa)
+		var nuevas: int = 0
+		for i in range(5):
+			if i < comunitarias.size():
+				var carta: CartaUI = CartaUI.crear(comunitarias[i], true, TAM_MESA)
+				cartas_mesa.add_child(carta)
+				if i >= _mesa_previas:
+					_animar_aparicion(carta, nuevas * 0.15)
+					nuevas += 1
+			else:
+				cartas_mesa.add_child(CartaUI.hueco(TAM_MESA))
+		_mesa_previas = comunitarias.size()
 
 	# Tarjetas de jugadores: la mitad a cada lado de la mesa
 	_limpiar(col_izq)
@@ -295,8 +349,15 @@ func _actualizar() -> void:
 			lbl_mano.text = "Cartas de %s" % actual.nombre
 		else:
 			lbl_mano.text = "Turno de %s: pasa el computador y pulsa «Ver mis cartas»" % actual.nombre
+		var k: int = 0
 		for c in actual.mano.obtener_cartas():
-			cartas_mano.add_child(CartaUI.crear(c, viendo, TAM_MANO))
+			var carta_mano: CartaUI = CartaUI.crear(c, viendo, TAM_MANO)
+			cartas_mano.add_child(carta_mano)
+			if viendo and _anim_mano:
+				_animar_aparicion(carta_mano, k * 0.12)
+			k += 1
+		if viendo:
+			_anim_mano = false
 	else:
 		lbl_mano.text = ""
 
@@ -366,6 +427,8 @@ func _crear_tarjeta(j: Jugador, actual: Jugador, fin: bool) -> PanelContainer:
 	elif j == actual:
 		lbl.add_theme_color_override("font_color", Color.YELLOW)
 	fila.add_child(lbl)
+	if j.apuesta_actual > 0 and j.en_mano and not fin:
+		fila.add_child(FichaUI.pila(j.apuesta_actual, 18, 3))
 
 	# Al terminar la mano se ven las cartas de quienes llegaron al final
 	if fin and j.en_mano:
@@ -373,6 +436,25 @@ func _crear_tarjeta(j: Jugador, actual: Jugador, fin: bool) -> PanelContainer:
 			fila.add_child(CartaUI.crear(c, true, TAM_MINI))
 	return tarjeta
 
+func _animar_aparicion(nodo: Control, retraso: float = 0.0) -> void:
+	nodo.pivot_offset = nodo.custom_minimum_size / 2
+	nodo.modulate.a = 0.0
+	nodo.scale = Vector2(0.5, 0.5)
+	var t: Tween = nodo.create_tween().set_parallel(true)
+	t.tween_property(nodo, "modulate:a", 1.0, 0.25).set_delay(retraso)
+	t.tween_property(nodo, "scale", Vector2.ONE, 0.3).set_delay(retraso) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## El bote "salta" cuando sube.
+func _pulso(nodo: Control) -> void:
+	if _tween_bote != null and _tween_bote.is_valid():
+		_tween_bote.kill()
+	nodo.pivot_offset = nodo.size / 2
+	nodo.scale = Vector2.ONE
+	_tween_bote = nodo.create_tween()
+	_tween_bote.tween_property(nodo, "scale", Vector2(1.25, 1.25), 0.12)
+	_tween_bote.tween_property(nodo, "scale", Vector2.ONE, 0.2)
 # ---------------------------------------------------------------------------
 #  Ayudas
 # ---------------------------------------------------------------------------
