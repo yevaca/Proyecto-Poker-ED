@@ -32,65 +32,81 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LblFase" type="Label" parent="VBoxContainer" unique_id=1685281480]
+[node name="BarraSuperior" type="HBoxContainer" parent="VBoxContainer" unique_id=1162734123]
 layout_mode = 2
 
-[node name="LblBote" type="Label" parent="VBoxContainer" unique_id=281570333]
+[node name="LblFase" type="Label" parent="VBoxContainer/BarraSuperior" unique_id=1685281480]
 layout_mode = 2
 
-[node name="LblMesa" type="Label" parent="VBoxContainer" unique_id=2108161846]
+[node name="BtnMenu" type="Button" parent="VBoxContainer/BarraSuperior" unique_id=107052475]
+layout_mode = 2
+text = "Volver al menú"
+
+[node name="Centro" type="HBoxContainer" parent="VBoxContainer" unique_id=566975849]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ColIzq" type="VBoxContainer" parent="VBoxContainer/Centro" unique_id=1126243746]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ColCentro" type="VBoxContainer" parent="VBoxContainer/Centro" unique_id=1111129135]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PanelMesa" type="PanelContainer" parent="VBoxContainer/Centro/ColCentro" unique_id=677004898]
 layout_mode = 2
 
-[node name="CartasMesa" type="HBoxContainer" parent="VBoxContainer" unique_id=1612900430]
+[node name="ContenidoMesa" type="VBoxContainer" parent="VBoxContainer/Centro/ColCentro/PanelMesa" unique_id=169970038]
 layout_mode = 2
 
-[node name="GridJugadores" type="GridContainer" parent="VBoxContainer" unique_id=1628592039]
-layout_mode = 2
-theme_override_constants/h_separation = 30
-columns = 2
-
-[node name="LblMano" type="Label" parent="VBoxContainer" unique_id=1027903987]
+[node name="LblBote" type="Label" parent="VBoxContainer/Centro/ColCentro/PanelMesa/ContenidoMesa" unique_id=281570333]
 layout_mode = 2
 
-[node name="CartasMano" type="HBoxContainer" parent="VBoxContainer" unique_id=1317717984]
+[node name="CartasMesa" type="HBoxContainer" parent="VBoxContainer/Centro/ColCentro/PanelMesa/ContenidoMesa" unique_id=1612900430]
 layout_mode = 2
 
-[node name="BtnVer" type="Button" parent="VBoxContainer" unique_id=1002410071]
+[node name="LblMano" type="Label" parent="VBoxContainer/Centro/ColCentro" unique_id=1027903987]
+layout_mode = 2
+
+[node name="CartasMano" type="HBoxContainer" parent="VBoxContainer/Centro/ColCentro" unique_id=1317717984]
+layout_mode = 2
+
+[node name="BtnVer" type="Button" parent="VBoxContainer/Centro/ColCentro" unique_id=1002410071]
 layout_mode = 2
 text = "Ver mis cartas"
 
-[node name="LblMensaje" type="Label" parent="VBoxContainer" unique_id=599035378]
+[node name="LblMensaje" type="Label" parent="VBoxContainer/Centro/ColCentro" unique_id=599035378]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1615575760]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Centro/ColCentro" unique_id=1615575760]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="BtnFold" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1880157079]
+[node name="BtnFold" type="Button" parent="VBoxContainer/Centro/ColCentro/HBoxContainer" unique_id=1880157079]
 layout_mode = 2
 text = "Retirarse"
 
-[node name="BtnIgualar" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=197515857]
+[node name="BtnIgualar" type="Button" parent="VBoxContainer/Centro/ColCentro/HBoxContainer" unique_id=197515857]
 layout_mode = 2
 
-[node name="SpinSubir" type="SpinBox" parent="VBoxContainer/HBoxContainer" unique_id=1875629791]
+[node name="SpinSubir" type="SpinBox" parent="VBoxContainer/Centro/ColCentro/HBoxContainer" unique_id=1875629791]
 layout_mode = 2
 
-[node name="BtnSubir" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1209821681]
+[node name="BtnSubir" type="Button" parent="VBoxContainer/Centro/ColCentro/HBoxContainer" unique_id=1209821681]
 layout_mode = 2
 text = "Subir"
 
-[node name="BtnAllIn" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=2056628356]
+[node name="BtnAllIn" type="Button" parent="VBoxContainer/Centro/ColCentro/HBoxContainer" unique_id=2056628356]
 layout_mode = 2
 text = "ALL-IN"
 
-[node name="BtnNueva" type="Button" parent="VBoxContainer" unique_id=228646878]
+[node name="ColDer" type="VBoxContainer" parent="VBoxContainer/Centro" unique_id=1094287384]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-text = "Nueva Mano"
-
-[node name="BtnMenu" type="Button" parent="VBoxContainer" unique_id=107052475]
-layout_mode = 2
-text = "Volver al menú"
+alignment = 1
 
 [node name="DialogoSalir" type="ConfirmationDialog" parent="." unique_id=436411019]
 title = "Volver al menú"

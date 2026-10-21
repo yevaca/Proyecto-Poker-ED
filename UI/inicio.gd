@@ -5,9 +5,11 @@ extends Control
 @onready var spin_fichas: SpinBox = $CenterContainer/VBoxContainer/FilaFichas/SpinFichas
 @onready var lbl_error: Label = $CenterContainer/VBoxContainer/LblError
 @onready var btn_jugar: Button = $CenterContainer/VBoxContainer/BtnJugar
-
+@onready var lbl_titulo: Label = $CenterContainer/VBoxContainer/LblTitulo
 
 func _ready() -> void:
+	_estilizar()
+	
 	spin_jugadores.min_value = 2
 	spin_jugadores.max_value = Partida.MAX_JUGADORES
 	spin_jugadores.value = 4
@@ -56,3 +58,54 @@ func _on_jugar() -> void:
 	Config.nombres = nombres
 	Config.fichas = int(spin_fichas.value)
 	get_tree().change_scene_to_file("res://UI/mesa.tscn")
+	
+func _estilizar() -> void:
+	# Fondo verde de mesa (queda detras de todo)
+	var fondo: ColorRect = ColorRect.new()
+	fondo.color = Color(0.11, 0.37, 0.23)
+	add_child(fondo)
+	fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	move_child(fondo, 0)
+
+	# Tarjeta oscura con borde de madera detras del formulario
+	var centro: CenterContainer = $CenterContainer
+	var caja: VBoxContainer = $CenterContainer/VBoxContainer
+	var tarjeta: PanelContainer = PanelContainer.new()
+	var estilo: StyleBoxFlat = StyleBoxFlat.new()
+	estilo.bg_color = Color(0, 0, 0, 0.35)
+	estilo.set_corner_radius_all(20)
+	estilo.set_border_width_all(4)
+	estilo.border_color = Color(0.36, 0.2, 0.08)
+	estilo.set_content_margin_all(30)
+	tarjeta.add_theme_stylebox_override("panel", estilo)
+	centro.remove_child(caja)
+	tarjeta.add_child(caja)
+	centro.add_child(tarjeta)
+
+	# Titulo dorado con simbolos de los palos
+	lbl_titulo.text = "♠ ♥  Poker Texas Hold'em  ♦ ♣"
+	lbl_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_titulo.add_theme_font_size_override("font_size", 40)
+	lbl_titulo.add_theme_color_override("font_color", Color(1, 0.85, 0.3))
+	lbl_titulo.add_theme_color_override("font_outline_color", Color(0.3, 0.2, 0.0))
+	lbl_titulo.add_theme_constant_override("outline_size", 6)
+
+	# Mensaje de error y boton Jugar
+	lbl_error.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_error.add_theme_color_override("font_color", Color(1, 0.6, 0.5))
+	_estilizar_boton(btn_jugar, Color(0.8, 0.5, 0.1))
+	btn_jugar.add_theme_font_size_override("font_size", 22)
+	btn_jugar.custom_minimum_size.y = 54
+
+
+func _estilizar_boton(b: Button, color: Color) -> void:
+	for estado in ["normal", "hover", "pressed", "disabled"]:
+		var s: StyleBoxFlat = StyleBoxFlat.new()
+		s.set_corner_radius_all(10)
+		s.set_content_margin_all(10)
+		match estado:
+			"normal": s.bg_color = color
+			"hover": s.bg_color = color.lightened(0.2)
+			"pressed": s.bg_color = color.darkened(0.2)
+			"disabled": s.bg_color = color.darkened(0.5)
+		b.add_theme_stylebox_override(estado, s)
