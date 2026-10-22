@@ -98,4 +98,6 @@ Si todo está bien, al final aparece `fallos: 0`. Si `godot` no funciona como co
 
 ## Uso de inteligencia artificial
 
-Se usó Claude (Anthropic) como asistente en el proyecto. El uso de inteligencia artificial fue de aproximadamente el 80 %.
+El uso de inteligencia artificial en este proyecto fue de aproximadamente el 80 %. Se usó Claude (Anthropic) para escribir buena parte del código en GDScript, en particular la lógica del juego (turnos, reparto de cartas, evaluación de manos, showdown y botes laterales), para crear las pruebas automáticas, para resolver dudas sobre Git y GitHub y para ayudar con la redacción de la documentación.
+
+El equipo no escribió a mano la implementación completa ni aprendió a fondo la sintaxis de GDScript. Lo que sí hizo fue decidir qué construir, dar instrucciones precisas, revisar lo que se generaba y cuestionarlo. Por ejemplo, se discutió qué estructuras de datos tenían sentido para el juego y cuáles serían forzadas, cómo manejar a los jugadores retirados y eliminados sin sacarlos de la cola, y si cada estructura era realmente necesaria. También se hicieron preguntas hasta entender cómo funciona la lógica del programa.
