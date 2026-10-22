@@ -2,13 +2,13 @@
 
 Juego de póker Texas Hold'em hecho en Godot 4 con GDScript, como proyecto del curso de Estructuras de Datos (Universidad Nacional de Colombia). Pueden jugar de 2 a 9 personas en un mismo computador.
 
-El proyecto usa tres estructuras de datos lineales en las partes del juego donde realmente hacen falta. Cada una se explica en el documento de la entrega.
-
 ## Autores
 
-- Nombre del integrante 1
-- Nombre del integrante 2
-- Nombre del integrante 3
+- David Santiago Montiel Rodríguez
+- David Santiago Toro Arias
+- Jean Carlo Triana Guzmán
+
+Docente: Jonatan Gómez Perdomo
 
 ## Cómo abrir el juego
 
@@ -67,13 +67,15 @@ Se juega con las reglas de Texas Hold'em: cada jugador recibe dos cartas privada
 
 ## Estructuras de datos usadas
 
-| Estructura | Dónde se usa | Archivo |
-|---|---|---|
-| Cola circular | Orden de los turnos y botón del dealer | `Comportamiento/cola_circular.gd` |
-| Pila | El mazo de cartas | `Logica/baraja.gd` |
-| Cola con prioridad | Quién gana en el showdown y reparto de botes laterales | `Comportamiento/cola_prioridad.gd` |
+El proyecto usa tres estructuras lineales, cada una en la parte del juego donde resuelve un problema real:
 
-La cola circular y la pila usan arreglos de tamaño fijo. La cola con prioridad es una lista enlazada ordenada.
+| Estructura | Para qué se usa | Archivo |
+|---|---|---|
+| Cola circular | El orden de los turnos: cuando juega el último jugador, vuelve a empezar el primero | `Comportamiento/cola_circular.gd` |
+| Pila | El mazo de cartas: solo se puede tomar la carta de arriba | `Logica/baraja.gd` |
+| Cola con prioridad | Decidir quién gana en el showdown y repartir los botes laterales, ordenando por fuerza de mano o por lo aportado | `Comportamiento/cola_prioridad.gd` |
+
+La explicación detallada de por qué y cómo se usó cada una está en el documento de la entrega.
 
 ## Estructura del proyecto
 
@@ -96,8 +98,4 @@ Si todo está bien, al final aparece `fallos: 0`. Si `godot` no funciona como co
 
 ## Uso de inteligencia artificial
 
-Todo el código de este proyecto se desarrolló con ayuda de herramientas de inteligencia artificial, entre ellas Claude (Anthropic). Es un uso amplio, y se dice así a propósito para ser transparentes.
-
-El equipo no escribió el código a mano. Lo que hizo fue decidir qué construir, dar instrucciones precisas, revisar lo que se generaba y cuestionarlo. Por ejemplo, se discutió qué estructuras de datos tenían sentido para el juego y cuáles serían forzadas, cómo manejar a los jugadores retirados y eliminados sin sacarlos de la cola, y si cada estructura era realmente necesaria. También se hicieron preguntas hasta entender cómo funciona la lógica del juego.
-
-El documento explicativo de la entrega cuenta con más detalle cómo se usó la herramienta.
+Se usó Claude (Anthropic) como asistente en el proyecto. El uso de inteligencia artificial fue de aproximadamente el 80 %.
